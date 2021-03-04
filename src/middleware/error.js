@@ -11,10 +11,13 @@ const errorHandler = (err, req, res, next) => {
     error = new ErrorResponse(`Resource not found id of ${err.value}`, 404);
   }
 
-  // Mongoose Validation Error
-  if (err.name === "ValidationError") {
-    const message = err._message;
-    error = new ErrorResponse(message, 400);
+  // Mongoose ValidationError
+  if (err.name == "ValidationError") {
+    let message = Object.keys(err.errors).map(
+      (key) => err.errors[key].properties.message
+    );
+    console.log(message);
+    error = new ErrorResponse(message, 404);
   }
 
   // Mongoose duplicate keys
